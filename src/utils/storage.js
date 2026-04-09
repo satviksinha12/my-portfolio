@@ -85,6 +85,10 @@ const storage = {
     set('pf_analytics', a);
   },
 
+  // Skills
+  getSkills: () => get('pf_skills') || [],
+  saveSkills: (skills) => set('pf_skills', skills),
+
   // Auth
   getPassword: () => get('pf_admin_pw'),
   setPassword: (pw) => set('pf_admin_pw', pw),
@@ -95,6 +99,7 @@ const storage = {
     return JSON.stringify({
       projects: this.getProjects(), posts: this.getPosts(),
       categories: this.getCategories(), theme: this.getTheme(), profile: this.getProfile(),
+      skills: this.getSkills(),
     }, null, 2);
   },
   importAll(json) {
@@ -104,6 +109,7 @@ const storage = {
     if (d.categories) set('pf_categories', d.categories);
     if (d.theme) set('pf_theme', d.theme);
     if (d.profile) set('pf_profile', d.profile);
+    if (d.skills) set('pf_skills', d.skills);
   },
 };
 

@@ -47,7 +47,10 @@ export default function Home() {
 
   const filtered = filter === 'all' ? projects : projects.filter(p => p.category === filter);
 
-  const allTags = [...new Set(projects.flatMap(p => p.tags || []))];
+  const savedSkills = storage.getSkills();
+  const allTags = savedSkills.length > 0
+    ? savedSkills
+    : [...new Set(projects.flatMap(p => p.tags || []))];
 
   return (
     <div className="home">

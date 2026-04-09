@@ -5,6 +5,8 @@ import { showToast } from '../../components/common/Toast';
 export default function AdminSettings() {
   const [profile, setProfile] = useState(storage.getProfile);
   const [categories, setCategories] = useState(storage.getCategories);
+  const [skills, setSkills] = useState(storage.getSkills);
+  const [newSkill, setNewSkill] = useState('');
 
   const saveProfile = (e) => {
     e.preventDefault();
@@ -85,6 +87,51 @@ export default function AdminSettings() {
         </div>
       ))}
       <button className="btn btn-sm" onClick={addCategory} style={{ marginTop: '.5rem' }}>+ Add Category</button>
+
+      <h3 style={{ margin: '2rem 0 .75rem' }}>Tech Stack / Skills</h3>
+      <p style={{ color: 'var(--dim)', fontSize: '.85rem', marginBottom: '.75rem' }}>These appear in the "Tech Stack" section on your homepage.</p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', marginBottom: '.75rem' }}>
+        {skills.map((s, i) => (
+          <span key={i} style={{
+            display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+            padding: '.35rem .75rem', borderRadius: '100px',
+            background: 'rgba(99,102,241,.15)', color: 'var(--primary)', fontSize: '.85rem'
+          }}>
+            {s}
+            <button
+              onClick={() => { const next = skills.filter((_, j) => j !== i); setSkills(next); storage.saveSkills(next); }}
+              style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '1rem', lineHeight: 1, padding: 0 }}
+            >&times;</button>
+          </span>
+        ))}
+      </div>
+      <div style={{ display: 'flex', gap: '.5rem', maxWidth: 400 }}>
+        <input
+          type="text" value={newSkill} onChange={e => setNewSkill(e.target.value)}
+          placeholder="e.g. React, Python, Docker..."
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              const val = newSkill.trim();
+              if (val && !skills.includes(val)) {
+                const next = [...skills, val];
+                setSkills(next);
+                storage.saveSkills(next);
+                setNewSkill('');
+              }
+            }
+          }}
+        />
+        <button className="btn btn-sm" onClick={() => {
+          const val = newSkill.trim();
+          if (val && !skills.includes(val)) {
+            const next = [...skills, val];
+            setSkills(next);
+            storage.saveSkills(next);
+            setNewSkill('');
+          }
+        }}>Add</button>
+      </div>
 
       <h3 style={{ margin: '2rem 0 .75rem' }}>Data Management</h3>
       <div style={{ display: 'flex', gap: '.75rem' }}>
